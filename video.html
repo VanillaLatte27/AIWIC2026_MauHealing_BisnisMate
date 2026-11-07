@@ -1,0 +1,1166 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BisnisMate AI — Argon 4 Procedural Motion Graphic Showreel (AIWIC 2026)</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800;900&family=JetBrains+Mono:wght@400;600;800&family=Outfit:wght@400;600;800;900&display=swap" rel="stylesheet">
+  <!-- FontAwesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #030712;
+      color: #F8FAFC;
+      user-select: none;
+      overflow-x: hidden;
+    }
+    .font-mono-code { font-family: 'JetBrains Mono', monospace; }
+    .font-display { font-family: 'Outfit', sans-serif; }
+    
+    /* Neon Glows */
+    .glow-teal { filter: drop-shadow(0 0 15px rgba(29, 154, 138, 0.6)); }
+    .glow-orange { filter: drop-shadow(0 0 15px rgba(255, 141, 42, 0.6)); }
+    .glow-cyan { filter: drop-shadow(0 0 20px rgba(56, 189, 248, 0.7)); }
+    
+    /* Custom Scrubber */
+    input[type=range] {
+      -webkit-appearance: none;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 9999px;
+      height: 6px;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      height: 16px;
+      width: 16px;
+      border-radius: 50%;
+      background: #FF8D2A;
+      cursor: pointer;
+      box-shadow: 0 0 10px #FF8D2A;
+      border: 2px solid #FFF;
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-white min-h-screen flex flex-col items-center justify-center p-2 sm:p-4 selection:bg-bi-teal">
+
+  <!-- Top Header Navigation -->
+  <header class="w-full max-w-6xl mx-auto flex items-center justify-between py-2 px-3 border-b border-slate-800/80 mb-3 text-xs">
+    <div class="flex items-center gap-3">
+      <a href="/" class="flex items-center gap-2 text-slate-300 hover:text-white transition group">
+        <i class="fas fa-arrow-left text-bi-teal group-hover:-translate-x-1 transition-transform"></i>
+        <span class="font-bold">Kembali ke Dashboard Web</span>
+      </a>
+      <span class="text-slate-600">|</span>
+      <div class="flex items-center gap-2">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+        <span class="font-mono-code text-[11px] text-emerald-400 font-bold uppercase tracking-wider">Argon 4 Procedural Engine (60 FPS)</span>
+      </div>
+    </div>
+    
+    <div class="flex items-center gap-3 font-mono-code text-[11px] text-slate-400">
+      <span>AIWIC 2026</span>
+      <span class="text-slate-600">&bull;</span>
+      <span class="text-bi-orange font-bold">Tim: Mau Healing</span>
+      <span class="text-slate-600">&bull;</span>
+      <span>Inovator: Candra Kus Khoiri W.</span>
+    </div>
+  </header>
+
+  <!-- Video Player Wrapper (16:9 Aspect Ratio) -->
+  <main class="w-full max-w-6xl mx-auto flex flex-col items-center">
+    <div id="player-container" class="relative w-full aspect-video bg-black rounded-2xl overflow-hidden border border-slate-800 shadow-2xl shadow-cyan-950/20 group">
+      
+      <!-- 60 FPS Procedural Canvas (Full HD 1920x1080 Native Buffer) -->
+      <canvas id="motionCanvas" width="1920" height="1080" class="w-full h-full object-contain block cursor-pointer"></canvas>
+
+      <!-- HUD Top Bar Overlay -->
+      <div class="absolute top-4 left-4 right-4 flex justify-between items-center pointer-events-none text-xs font-mono-code">
+        <div class="flex items-center gap-2 bg-black/60 backdrop-blur px-3 py-1.5 rounded-lg border border-white/10">
+          <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
+          <span class="font-bold tracking-widest text-slate-200">ARGON 4 MOTION GRAPHIC SHOWREEL</span>
+          <span class="text-slate-500">|</span>
+          <span id="hud-scene-name" class="text-bi-teal font-semibold">ACT 1: THE REGIONAL REALITY</span>
+        </div>
+        
+        <div class="flex items-center gap-2 bg-black/60 backdrop-blur px-3 py-1.5 rounded-lg border border-white/10">
+          <span id="hud-timecode" class="text-amber-400 font-bold">00:00:00</span>
+          <span class="text-slate-500">/</span>
+          <span class="text-slate-400">00:01:25</span>
+          <span class="text-slate-500">|</span>
+          <span id="hud-fps" class="text-emerald-400 font-bold">60 FPS</span>
+        </div>
+      </div>
+
+      <!-- Center Big Play Button (When Paused) -->
+      <div id="center-play-btn" onclick="togglePlay()" class="absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-[2px] transition-opacity cursor-pointer">
+        <div class="w-20 h-20 rounded-full bg-gradient-to-tr from-bi-teal to-cyan-400 flex items-center justify-center text-slate-950 text-3xl shadow-xl shadow-cyan-500/30 hover:scale-110 transition-transform">
+          <i class="fas fa-play ml-1"></i>
+        </div>
+      </div>
+
+      <!-- Watermark Logo Bottom Left -->
+      <div class="absolute bottom-16 left-6 pointer-events-none flex items-center gap-3 opacity-80">
+        <img src="public/assets/bisnismate_logo.png" onerror="this.src='bisnismate_logo.png'" alt="BisnisMate AI" class="h-8 w-auto object-contain glow-teal">
+        <div class="border-l border-white/20 pl-2 text-[10px] font-mono-code leading-tight text-slate-300 hidden sm:block">
+          <div>AUTONOMOUS FINANCIAL CO-PILOT</div>
+          <div class="text-bi-orange font-bold">ZERO-TYPING &bull; ADAT SYNC &bull; KUR SAK EMKM</div>
+        </div>
+      </div>
+
+      <!-- Recording Indicator (Visible while exporting video) -->
+      <div id="recording-indicator" class="hidden absolute top-4 left-1/2 -translate-x-1/2 bg-red-600/90 text-white font-mono-code text-xs px-4 py-1.5 rounded-full flex items-center gap-2 shadow-lg shadow-red-600/40 animate-pulse border border-red-400">
+        <i class="fas fa-circle-dot"></i>
+        <span>MEREKAM VIDEO EXPORT (MOHON JANGAN PINDAH TAB)...</span>
+      </div>
+
+    </div>
+
+    <!-- Video Controller Bar -->
+    <div class="w-full bg-slate-900 border border-slate-800 rounded-xl p-3.5 mt-3 shadow-lg space-y-3">
+      
+      <!-- Timeline Scrubber with Markers -->
+      <div class="relative w-full">
+        <input type="range" id="timeScrubber" min="0" max="85" step="0.05" value="0" oninput="seekTo(this.value)" class="w-full cursor-pointer">
+        <!-- Scene Marker Pills -->
+        <div class="flex justify-between text-[10px] font-mono-code text-slate-400 mt-1 px-1">
+          <span onclick="seekTo(0)" class="cursor-pointer hover:text-bi-teal font-semibold">0:00 Realitas UMKM</span>
+          <span onclick="seekTo(12)" class="cursor-pointer hover:text-bi-teal font-semibold">0:12 Digital Gap</span>
+          <span onclick="seekTo(26)" class="cursor-pointer hover:text-bi-teal font-semibold">0:26 3-Pilar Inovasi</span>
+          <span onclick="seekTo(45)" class="cursor-pointer hover:text-bi-teal font-semibold">0:45 Clean Tech</span>
+          <span onclick="seekTo(58)" class="cursor-pointer hover:text-bi-teal font-semibold">0:58 Roadmap & ROI</span>
+          <span onclick="seekTo(70)" class="cursor-pointer hover:text-bi-teal font-semibold">0:70 Visi B-A-L-I</span>
+        </div>
+      </div>
+
+      <!-- Control Buttons Row -->
+      <div class="flex flex-wrap items-center justify-between gap-3 text-xs">
+        
+        <!-- Left: Play/Pause/Restart -->
+        <div class="flex items-center gap-2">
+          <button onclick="togglePlay()" id="playPauseBtn" class="bg-bi-teal hover:bg-teal-500 text-slate-950 font-bold px-4 py-2 rounded-lg transition flex items-center gap-2 shadow-md shadow-teal-500/20">
+            <i class="fas fa-play" id="playIcon"></i> <span id="playText">Putar Video</span>
+          </button>
+          <button onclick="restartVideo()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-2 rounded-lg transition" title="Ulangi dari Awal">
+            <i class="fas fa-rotate-left"></i>
+          </button>
+          <button onclick="toggleMute()" id="muteBtn" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-2 rounded-lg transition flex items-center gap-1.5" title="Audio Synth FX">
+            <i class="fas fa-volume-high" id="muteIcon"></i> <span class="hidden sm:inline">Synth Audio</span>
+          </button>
+          <button onclick="toggleVoiceover()" id="voiceoverBtn" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-2 rounded-lg transition flex items-center gap-1.5" title="Narasi Suara AI (Bahasa Indonesia)">
+            <i class="fas fa-microphone-lines text-amber-400"></i> <span class="hidden sm:inline">Narasi AI</span>
+          </button>
+        </div>
+
+        <!-- Center: Jump to Scene Tabs -->
+        <div class="hidden lg:flex items-center gap-1 bg-slate-950 p-1 rounded-lg border border-slate-800 font-mono-code text-[11px]">
+          <button onclick="seekTo(0)" class="px-2.5 py-1 rounded hover:bg-slate-800 text-slate-300 hover:text-white">Bab 1</button>
+          <button onclick="seekTo(12)" class="px-2.5 py-1 rounded hover:bg-slate-800 text-slate-300 hover:text-white">Bab 2</button>
+          <button onclick="seekTo(26)" class="px-2.5 py-1 rounded hover:bg-slate-800 text-slate-300 hover:text-white">Bab 3</button>
+          <button onclick="seekTo(45)" class="px-2.5 py-1 rounded hover:bg-slate-800 text-slate-300 hover:text-white">Bab 4</button>
+          <button onclick="seekTo(58)" class="px-2.5 py-1 rounded hover:bg-slate-800 text-slate-300 hover:text-white">Bab 5</button>
+          <button onclick="seekTo(70)" class="px-2.5 py-1 rounded hover:bg-slate-800 text-slate-300 hover:text-white">Bab 6</button>
+        </div>
+
+        <!-- Right: Export Video & Fullscreen -->
+        <div class="flex items-center gap-2">
+          <!-- Record & Download Video Button -->
+          <button onclick="recordAndExportVideo()" id="exportVideoBtn" class="bg-gradient-to-r from-bi-orange to-red-500 hover:from-orange-500 hover:to-red-600 text-white font-bold px-4 py-2 rounded-lg transition flex items-center gap-2 shadow-lg shadow-orange-500/30">
+            <i class="fas fa-video"></i> <span>Rekam & Unduh MP4 / WebM</span>
+          </button>
+          <button onclick="toggleFullscreen()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 p-2 rounded-lg transition" title="Layar Penuh (F)">
+            <i class="fas fa-expand"></i>
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Video Story Arc & Scene Description Card -->
+    <div class="w-full bg-slate-900/60 border border-slate-800/80 rounded-xl p-4 mt-3 text-xs space-y-2">
+      <div class="flex items-center justify-between text-slate-400 font-mono-code text-[11px]">
+        <span class="text-bi-teal font-bold"><i class="fas fa-film mr-1.5"></i> NARASI & SINOPSIS SHOWREEL RESMI AIWIC 2026:</span>
+        <span id="scene-timestamp-badge">Waktu: 00:00 s.d. 00:12</span>
+      </div>
+      <p id="scene-description" class="text-slate-300 leading-relaxed">
+        <strong>Babak 1: Realitas UMKM Subsisten Bali.</strong> Kemakmuran pariwisata Bali ditopang oleh 442K+ pedagang pasar tradisional seperti Ibu Wayan di Pasar Badung. Pedagang bekerja 14 jam/hari dengan tangan basah, kehilangan 2,5 jam/hari untuk mencatat nota manual yang rentan basah dan tercecer.
+      </p>
+    </div>
+
+  </main>
+
+  <!-- Procedural Motion Graphic Engine (Argon 4 Implementation) -->
+  <script>
+    const canvas = document.getElementById('motionCanvas');
+    const ctx = canvas.getContext('2d');
+    const W = 1920;
+    const H = 1080;
+
+    let currentTime = 0;
+    const totalDuration = 85.0; // 85 seconds comprehensive showreel
+    let isPlaying = false;
+    let isMuted = false;
+    let isVoiceoverEnabled = true;
+    let lastTimestamp = performance.now();
+    let fpsCounter = 60;
+    let framesThisSecond = 0;
+    let lastFpsUpdate = performance.now();
+
+    // Procedural Particle Background
+    const particles = [];
+    for (let i = 0; i < 90; i++) {
+      particles.push({
+        x: Math.random() * W,
+        y: Math.random() * H,
+        vx: (Math.random() - 0.5) * 0.8,
+        vy: (Math.random() - 0.5) * 0.8,
+        size: Math.random() * 2.5 + 1,
+        color: Math.random() > 0.5 ? '#1D9A8A' : '#FF8D2A',
+        alpha: Math.random() * 0.6 + 0.2
+      });
+    }
+
+    // Procedural Web Audio Synthesizer (No external MP3 files needed!)
+    let audioCtx = null;
+    let synthInterval = null;
+
+    function initAudio() {
+      if (!audioCtx) {
+        const AudioClass = window.AudioContext || window.webkitAudioContext;
+        audioCtx = new AudioClass();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+    }
+
+    function playTone(freq, duration, type = 'sine', gainVal = 0.1) {
+      if (isMuted || !audioCtx) return;
+      try {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        gain.gain.setValueAtTime(gainVal, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+      } catch (e) {}
+    }
+
+    // Procedural Cyber Background Soundscape
+    function playCyberPulse() {
+      if (isMuted || !audioCtx || !isPlaying) return;
+      // High-tech chord progression (Am -> F -> C -> G)
+      const baseNotes = [110, 130.8, 164.8, 220, 261.6, 329.6];
+      const randomNote = baseNotes[Math.floor(Math.random() * baseNotes.length)];
+      playTone(randomNote, 0.4, 'sine', 0.04);
+      playTone(randomNote * 2, 0.15, 'triangle', 0.02);
+    }
+
+    // Web Speech Synthesis (Narration in Indonesian)
+    const narrationScripts = [
+      { start: 0.5, end: 11.5, text: "Kemakmuran pariwisata Bali ditopang oleh 442 ribu UMKM subsisten. Namun 90 persen pedagang mengalami kelelahan kognitif akibat mencatat manual di buku kas kertas." },
+      { start: 12.5, end: 25.5, text: "Aplikasi kasir konvensional terbukti gagal pada pedagang pasar tradisional karena menuntut ketik manual. Akibatnya, 95 persen UMKM mikro ditolak permodalan kredit KUR perbankan." },
+      { start: 26.5, end: 44.5, text: "BisnisMate hadir sebagai solusi revolusioner. Co-Pilot AI berbasis Web tanpa ketik dengan pengenalan suara dialek Bali, pemindai nota basah kamera, serta sinkronisasi kalender hari raya adat Galungan." },
+      { start: 45.5, end: 57.5, text: "Didukung arsitektur modular Node.js Express yang ringan, aman dengan enkripsi AES-256, serta patuh penuh pada Undang-Undang Perlindungan Data Pribadi." },
+      { start: 58.5, end: 69.5, text: "Dengan skor kelayakan 4,58 dari skala 5, BisnisMate memproyeksikan arus kas mandiri tanpa bakar uang, mencapai titik impas pada bulan ke-8." },
+      { start: 70.5, end: 84.0, text: "Inilah wujud nyata visi B-A-L-I. Mewujudkan UMKM Bali Naik Kelas bersama Bank Indonesia dan perbankan nasional melalui kecerdasan buatan inklusif." }
+    ];
+
+    let spokenCues = new Set();
+    function triggerNarration(time) {
+      if (!isVoiceoverEnabled || !('speechSynthesis' in window)) return;
+      for (const cue of narrationScripts) {
+        if (time >= cue.start && time < cue.start + 1.0 && !spokenCues.has(cue.start)) {
+          spokenCues.add(cue.start);
+          const utter = new SpeechSynthesisUtterance(cue.text);
+          utter.lang = 'id-ID';
+          utter.rate = 1.05;
+          utter.pitch = 1.0;
+          window.speechSynthesis.cancel();
+          window.speechSynthesis.speak(utter);
+          break;
+        }
+      }
+    }
+
+    // =========================================================================
+    // RENDER SCENES (ARGON 4 PROCEDURAL ENGINE)
+    // =========================================================================
+
+    function drawGridBackground(t) {
+      // Deep Space Gradient
+      const grad = ctx.createRadialGradient(W / 2, H / 2, 200, W / 2, H / 2, W);
+      grad.addColorStop(0, '#0a1628');
+      grad.addColorStop(1, '#020617');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, W, H);
+
+      // Cyber Matrix Grid
+      ctx.strokeStyle = 'rgba(56, 189, 248, 0.04)';
+      ctx.lineWidth = 1;
+      const gridSize = 64;
+      const offsetX = (t * 20) % gridSize;
+      const offsetY = (t * 15) % gridSize;
+
+      for (let x = -gridSize; x < W + gridSize; x += gridSize) {
+        ctx.beginPath();
+        ctx.moveTo(x + offsetX, 0);
+        ctx.lineTo(x + offsetX, H);
+        ctx.stroke();
+      }
+      for (let y = -gridSize; y < H + gridSize; y += gridSize) {
+        ctx.beginPath();
+        ctx.moveTo(0, y + offsetY);
+        ctx.lineTo(W, y + offsetY);
+        ctx.stroke();
+      }
+
+      // Constellation Particles
+      particles.forEach(p => {
+        p.x += p.vx;
+        p.y += p.vy;
+        if (p.x < 0) p.x = W;
+        if (p.x > W) p.x = 0;
+        if (p.y < 0) p.y = H;
+        if (p.y > H) p.y = 0;
+
+        ctx.fillStyle = p.color;
+        ctx.globalAlpha = p.alpha * (0.8 + 0.2 * Math.sin(t * 3 + p.x));
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fill();
+      });
+      ctx.globalAlpha = 1.0;
+    }
+
+    // --- ACT 1: 0.0s - 12.0s: REALITAS OPERASIONAL UMKM BALI ---
+    function renderScene1(t) {
+      const p = t / 12.0; // 0 to 1
+
+      // Top Category Pill
+      drawPill(W / 2, 140, "BABAK 1: REALITAS UMKM BALI", "#FF8D2A", 16);
+
+      // Hero Kinetic Title
+      ctx.font = "900 68px 'Outfit', sans-serif";
+      ctx.fillStyle = "#FFFFFF";
+      ctx.textAlign = "center";
+      ctx.fillText("PARIWISATA BALI BERTUMBUH PESAT", W / 2, 230);
+      
+      ctx.font = "800 52px 'Outfit', sans-serif";
+      ctx.fillStyle = "#38BDF8";
+      ctx.fillText("NAMUN 442K+ UMKM TERJEBAK BEBAN KOGNITIF MANUAL", W / 2, 305);
+
+      // 3 Stat Metric Cards
+      const cardY = 400;
+      const cardW = 480;
+      const cardH = 260;
+      const spacing = 530;
+      const startX = W / 2 - spacing;
+
+      drawStatCard(startX, cardY, cardW, cardH, "442.848", "TOTAL UMKM BALI", "90% pelaku usaha merupakan generasi Boomer & Gen-X di pasar tradisional.", "#002060", "#38BDF8");
+      drawStatCard(W / 2, cardY, cardW, cardH, "2,5 JAM", "WAKTU TERBUANG / HARI", "Habis untuk mengetik atau menulis rekap nota kertas pasar yang rentan basah.", "#1D9A8A", "#50E3C2");
+      drawStatCard(W / 2 + spacing, cardY, cardW, cardH, "88%", "KEBOCORAN KAS HARIAN", "Uang belanja dapur keluarga tercampur dengan uang modal dagangan warung.", "#C00000", "#FF6B6B");
+
+      // Bottom Highlight Box
+      const boxW = 1200;
+      const boxH = 110;
+      drawRoundedRect((W - boxW) / 2, 730, boxW, boxH, 16, 'rgba(15, 23, 42, 0.85)', '#38BDF8', 2);
+      ctx.font = "600 24px 'Plus Jakarta Sans', sans-serif";
+      ctx.fillStyle = "#E2E8F0";
+      ctx.textAlign = "center";
+      ctx.fillText("Persona Ibu Wayan (Pasar Kumbasari): Bekerja fisik 14 jam sehari dengan tangan basah/kotor,", W / 2, 775);
+      ctx.fillStyle = "#FF8D2A";
+      ctx.font = "800 24px 'Plus Jakarta Sans', sans-serif";
+      ctx.fillText("tidak sanggup dan menolak mengetik mutasi satu per satu di aplikasi kasir rumit.", W / 2, 810);
+    }
+
+    // --- ACT 2: 12.0s - 26.0s: THE DIGITAL GAP & FAILURE OF POS APPS ---
+    function renderScene2(t) {
+      const p = (t - 12.0) / 14.0;
+
+      drawPill(W / 2, 140, "BABAK 2: KESENJANGAN DIGITAL & KEGAGALAN APP KASIR", "#C00000", 16);
+
+      ctx.font = "900 64px 'Outfit', sans-serif";
+      ctx.fillStyle = "#FFFFFF";
+      ctx.textAlign = "center";
+      ctx.fillText("TITIK BUTA DIGITALISASI PERBANKAN", W / 2, 230);
+      
+      ctx.font = "600 32px 'Plus Jakarta Sans', sans-serif";
+      ctx.fillStyle = "#94A3B8";
+      ctx.fillText("Kita Mendidik Pembayaran (QRIS), Namun Melupakan Pembukuan Resmi", W / 2, 280);
+
+      // Left Chart: Native Gap Curve Visualization
+      const chartX = 260;
+      const chartY = 350;
+      const chartW = 650;
+      const chartH = 340;
+      drawNativeGapChart(chartX, chartY, chartW, chartH, p);
+
+      // Right Side: 3 Structural Failures
+      const failX = 980;
+      const startY = 350;
+      drawFailureCard(failX, startY, 680, 100, "1. KETIK MANUAL MEMICU CHURN >85%", "Memaksa pedagang mengetik SKU di layar kecil terbukti gagal (BukuKas tutup 2023).", "#C00000");
+      drawFailureCard(failX, startY + 120, 680, 100, "2. ASIMETRI HARI RAYA ADAT (DEAD-STOCK 35%)", "Aplikasi kasir biasa buta terhadap siklus Galungan & Kuningan, bahan makanan basi.", "#FF8D2A");
+      drawFailureCard(failX, startY + 240, 680, 100, "3. 95% UMKM DITOLAK KREDIT KUR BANK", "Pedagang tidak memiliki neraca SAK EMKM dan agunan fisik tambahan.", "#38BDF8");
+
+      // Bottom Takeaway Banner
+      drawRoundedRect(260, 740, 1400, 90, 16, 'rgba(192, 0, 0, 0.15)', '#C00000', 1.5);
+      ctx.font = "800 24px 'Plus Jakarta Sans', sans-serif";
+      ctx.fillStyle = "#FCA5A5";
+      ctx.textAlign = "center";
+      ctx.fillText("KESIMPULAN: Pedagang mikro membutuhkan Autonomous AI Co-Pilot TANPA KETIK yang adaptif Adat Bali.", W / 2, 795);
+    }
+
+    // --- ACT 3: 26.0s - 45.0s: THE BREAKTHROUGH: BISNISMATE AI 3-PILLARS ---
+    function renderScene3(t) {
+      const p = (t - 26.0) / 19.0;
+
+      drawPill(W / 2, 120, "BABAK 3: TEROBOSAN BISNISMATE AI (3 PILAR UTAMA)", "#1D9A8A", 16);
+
+      ctx.font = "900 68px 'Outfit', sans-serif";
+      ctx.fillStyle = "#FFFFFF";
+      ctx.textAlign = "center";
+      ctx.fillText("BISNISMATE WEB: AUTONOMOUS AI CO-PILOT", W / 2, 205);
+
+      ctx.font = "600 26px 'Plus Jakarta Sans', sans-serif";
+      ctx.fillStyle = "#50E3C2";
+      ctx.fillText("Zero-Typing Web PWA • Kalender Adat Sync • Bankable SAK EMKM & KUR", W / 2, 250);
+
+      // 3 Holographic Pillar Cards
+      const cardW = 440;
+      const cardH = 480;
+      const gap = 480;
+      const startX = W / 2 - gap;
+      const cardY = 300;
+
+      // Pillar 1: Voice & Vision
+      drawPillarBox(startX, cardY, cardW, cardH, "PILAR 1", "MULTIMODAL AI", [
+        "• Whisper LoRA Dialek Bali-Indonesia",
+        "• Gemini 2.5 Flash Vision OCR Nota",
+        "• Input Suara & Foto Kamera <1.2 Detik",
+        "• Akurasi Ekstraksi Entitas 94.2%"
+      ], "#1D9A8A", "fas fa-microphone-lines", t);
+
+      // Pillar 2: Cultural Sync
+      drawPillarBox(W / 2, cardY, cardW, cardH, "PILAR 2", "KALENDER ADAT SYNC", [
+        "• RAG Ontologi Caka 1948",
+        "• Prediksi Lonjakan Galungan & Kuningan",
+        "• Alarm Restock H-7 Cegah Dead-Stock",
+        "• Pemisahan Kas Usaha vs Dapur Keluarga"
+      ], "#FF8D2A", "fas fa-calendar-star", t);
+
+      // Pillar 3: Bankable Ledger
+      drawPillarBox(W / 2 + gap, cardY, cardW, cardH, "PILAR 3", "BANKABLE SAK EMKM", [
+        "• Otomatisasi Debet = Kredit Standar IAI",
+        "• Alternative Credit Scoring (88.5/100)",
+        "• Direct API Mandiri, BRI, & BPD Bali",
+        "• Unduh Dossier KUR Siap Cair 1-Klik"
+      ], "#002060", "fas fa-building-columns", t);
+
+      // Live Audio Wave Simulation in Card 1
+      drawInteractiveWaveform(startX + 40, cardY + 360, 360, 60, t);
+
+      // Bottom Achievement Stat Bar
+      drawRoundedRect(startX, 810, 1400, 70, 12, 'rgba(15, 23, 42, 0.9)', '#1D9A8A', 1.5);
+      ctx.font = "700 20px 'JetBrains Mono', monospace";
+      ctx.fillStyle = "#50E3C2";
+      ctx.textAlign = "center";
+      ctx.fillText("VALIDASI LAPANGAN: Pangkas Waktu Rekap 2.5 Jam Jadi <1.2s  |  Tekan Dead-Stock 35%  |  Skor KUR 88.5 Tier 1", W / 2, 852);
+    }
+
+    // --- ACT 4: 45.0s - 58.0s: CLEAN MODULAR ARCHITECTURE & REPO QUALITY ---
+    function renderScene4(t) {
+      const p = (t - 45.0) / 13.0;
+
+      drawPill(W / 2, 140, "BABAK 4: ARSITEKTUR KODE & KUALITAS REPOSITORI", "#38BDF8", 16);
+
+      ctx.font = "900 64px 'Outfit', sans-serif";
+      ctx.fillStyle = "#FFFFFF";
+      ctx.textAlign = "center";
+      ctx.fillText("ENTERPRISE MODULAR NODE.JS ARCHITECTURE", W / 2, 230);
+
+      ctx.font = "600 24px 'JetBrains Mono', monospace";
+      ctx.fillStyle = "#50E3C2";
+      ctx.fillText("Express 4.21 • Clean MVC Separation • 100% In-Memory Privacy (UU PDP)", W / 2, 275);
+
+      // Left: 3D Folder & Pipeline Tree
+      const treeX = 260;
+      const treeY = 340;
+      drawRepoFolderTree(treeX, treeY, 660, 390);
+
+      // Right: 4 Security & Testing Badges
+      const specX = 980;
+      drawTechBadge(specX, 340, 680, 85, "100% KEPATUHAN UU PDP NO. 27/2022", "Zero Raw-Voice Retention di cloud; rekaman diolah in-memory dan langsung dihapus.", "#107C41");
+      drawTechBadge(specX, 440, 680, 85, "STANDAR AKUNTANSI SAK EMKM IAI", "Aturan penyeimbang debit-kredit otomatis menjamin laporan keuangan lolos audit bank.", "#002060");
+      drawTechBadge(specX, 540, 680, 85, "OFFLINE-FIRST SERVICE WORKER", "Pedagang tetap bisa mencatat transaksi di basement pasar tanpa gangguan sinyal.", "#FF8D2A");
+      drawTechBadge(specX, 640, 680, 85, "AUTOMATED TEST SUITE: 5/5 PASSED", "Uji otomatis API, kalender adat, dan penyeimbang saldo lulus 100% via npm test.", "#38BDF8");
+
+      // Bottom Terminal Bar
+      drawRoundedRect(260, 760, 1400, 75, 12, '#030712', '#334155', 1);
+      ctx.font = "600 18px 'JetBrains Mono', monospace";
+      ctx.fillStyle = "#38BDF8";
+      ctx.textAlign = "left";
+      ctx.fillText("$ npm test  -->  [PASS] Health Check  |  [PASS] Calendar Caka  |  [PASS] SAK EMKM Balance Engine (100% SUCCESS)", 300, 805);
+    }
+
+    // --- ACT 5: 58.0s - 70.0s: ROADMAP & ZERO BURN-RATE FINANCIAL TRAJECTORY ---
+    function renderScene5(t) {
+      const p = (t - 58.0) / 12.0;
+
+      drawPill(W / 2, 140, "BABAK 5: PETA JALAN 18 BULAN & VALUASI KEUANGAN", "#FF8D2A", 16);
+
+      ctx.font = "900 64px 'Outfit', sans-serif";
+      ctx.fillStyle = "#FFFFFF";
+      ctx.textAlign = "center";
+      ctx.fillText("PETA JALAN EKSEKUSI & SKOR KELAYAKAN 4.58 / 5.00", W / 2, 230);
+
+      ctx.font = "600 24px 'Plus Jakarta Sans', sans-serif";
+      ctx.fillStyle = "#CBD5E1";
+      ctx.fillText("Model Monetisasi Mandiri (Zero Burn-Rate) • Titik Impas (Payback) Bulan ke-8", W / 2, 275);
+
+      // Left: Cashflow J-Curve Canvas
+      drawCashflowGraph(260, 340, 680, 360, p);
+
+      // Right: 4 Financial Highlights
+      const finX = 1000;
+      drawFinCard(finX, 340, 660, 75, "Rp 185,40 MILIAR", "Potensi Pertumbuhan Omzet UMKM Bali", "#1D9A8A");
+      drawFinCard(finX, 430, 660, 75, "Rp 36,80 MILIAR", "Manfaat Ekosistem 18 Bulan Pertama", "#38BDF8");
+      drawFinCard(finX, 520, 660, 75, "218,5% NET ROI", "Tingkat Pengembalian Investasi Produktif", "#FF8D2A");
+      drawFinCard(finX, 610, 660, 75, "BULAN KE-8", "Payback Period dari Biaya B2B API KUR", "#107C41");
+
+      // Bottom Gantt Summary
+      drawRoundedRect(260, 730, 1400, 95, 14, 'rgba(15, 23, 42, 0.9)', '#FF8D2A', 1.5);
+      ctx.font = "800 20px 'Plus Jakarta Sans', sans-serif";
+      ctx.fillStyle = "#FFF";
+      ctx.textAlign = "center";
+      ctx.fillText("FASE 1 (M1-M6): Pilot Pasar Badung (500 UMKM)  ➔  FASE 2 (M6-M13): Klaster 9 Kab/Kota Bali (25.000 MAU)", W / 2, 768);
+      ctx.fillStyle = "#50E3C2";
+      ctx.fillText("FASE 3 (M12-M18): Replikasi Nasional ke 5 Destinasi Pariwisata Super Prioritas (DPSP)", W / 2, 802);
+    }
+
+    // --- ACT 6: 70.0s - 85.0s: EPILOGUE & THE B-A-L-I STRATEGIC VISION ---
+    function renderScene6(t) {
+      const p = (t - 70.0) / 15.0;
+
+      drawPill(W / 2, 130, "BABAK 6: KESIMPULAN STRATEGIS B-A-L-I", "#50E3C2", 16);
+
+      ctx.font = "900 72px 'Outfit', sans-serif";
+      ctx.fillStyle = "#FFFFFF";
+      ctx.textAlign = "center";
+      ctx.fillText("MEWUJUDKAN UMKM BALI NAIK KELAS", W / 2, 220);
+
+      // 4 Pillars of B-A-L-I Formula
+      const boxW = 320;
+      const boxH = 220;
+      const gap = 350;
+      const startX = W / 2 - gap * 1.5;
+      const startY = 290;
+
+      drawBaliBox(startX, startY, boxW, boxH, "B", "BANKABLE", "Pedagang mikro memiliki neraca resmi dan skor KUR 88.5 siap akses kredit bank.", "#1D9A8A");
+      drawBaliBox(startX + gap, startY, boxW, boxH, "A", "AKURASI STOK", "Sinkronisasi kalender adat memangkas risiko dead-stock makanan hingga 35%.", "#FF8D2A");
+      drawBaliBox(startX + gap * 2, startY, boxW, boxH, "L", "LITERASI SUARA", "Zero-typing input suara & foto nota <1.2 detik hilangkan friksi aplikasi kasir.", "#38BDF8");
+      drawBaliBox(startX + gap * 3, startY, boxW, boxH, "I", "INKLUSI RIIL", "Akselerasi inklusi keuangan produktif bersama Bank Indonesia & perbankan.", "#107C41");
+
+      // Final Grand Submission Banner
+      const banW = 1400;
+      const banH = 220;
+      drawRoundedRect((W - banW) / 2, 560, banW, banH, 20, 'rgba(0, 32, 96, 0.75)', '#38BDF8', 2.5);
+
+      ctx.font = "900 42px 'Outfit', sans-serif";
+      ctx.fillStyle = "#FFFFFF";
+      ctx.textAlign = "center";
+      ctx.fillText("ARTIFICIAL INTELLIGENCE WORLD INNOVATION CHALLENGE (AIWIC) 2026", W / 2, 625);
+
+      ctx.font = "800 32px 'Plus Jakarta Sans', sans-serif";
+      ctx.fillStyle = "#FF8D2A";
+      ctx.fillText("TIM: MAU HEALING  |  INOVATOR: CANDRA KUS KHOIRI WICAKSONO", W / 2, 680);
+
+      ctx.font = "600 22px 'JetBrains Mono', monospace";
+      ctx.fillStyle = "#50E3C2";
+      ctx.fillText("Web PWA Live di http://localhost:3000 • Standar SAK EMKM IAI • Bank Mandiri & BRI Ready", W / 2, 735);
+    }
+
+    // --- REUSABLE CANVAS HELPER FUNCTIONS ---
+
+    function drawPill(x, y, text, color, fontSize = 14) {
+      ctx.save();
+      ctx.font = `800 ${fontSize}px 'JetBrains Mono', monospace`;
+      const metrics = ctx.measureText(text);
+      const w = metrics.width + 36;
+      const h = fontSize + 16;
+      drawRoundedRect(x - w / 2, y - h / 2, w, h, h / 2, 'rgba(15, 23, 42, 0.9)', color, 1.5);
+      ctx.fillStyle = color;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText(text, x, y);
+      ctx.restore();
+    }
+
+    function drawRoundedRect(x, y, w, h, r, fill, stroke, strokeW = 1) {
+      ctx.save();
+      ctx.beginPath();
+      ctx.moveTo(x + r, y);
+      ctx.arcTo(x + w, y, x + w, y + h, r);
+      ctx.arcTo(x + w, y + h, x, y + h, r);
+      ctx.arcTo(x, y + h, x, y, r);
+      ctx.arcTo(x, y, x + w, y, r);
+      ctx.closePath();
+      if (fill) {
+        ctx.fillStyle = fill;
+        ctx.fill();
+      }
+      if (stroke) {
+        ctx.strokeStyle = stroke;
+        ctx.lineWidth = strokeW;
+        ctx.stroke();
+      }
+      ctx.restore();
+    }
+
+    function drawStatCard(x, y, w, h, value, title, desc, col1, col2) {
+      const cx = x - w / 2;
+      drawRoundedRect(cx, y, w, h, 18, 'rgba(15, 23, 42, 0.9)', col2, 1.5);
+      
+      // Top colored bar
+      drawRoundedRect(cx, y, w, 8, 4, col2, null);
+
+      ctx.font = "900 64px 'Outfit', sans-serif";
+      ctx.fillStyle = col2;
+      ctx.textAlign = "center";
+      ctx.fillText(value, x, y + 85);
+
+      ctx.font = "800 20px 'JetBrains Mono', monospace";
+      ctx.fillStyle = "#FFFFFF";
+      ctx.fillText(title, x, y + 130);
+
+      ctx.font = "500 18px 'Plus Jakarta Sans', sans-serif";
+      ctx.fillStyle = "#94A3B8";
+      wrapText(desc, x, y + 175, w - 60, 24);
+    }
+
+    function drawFailureCard(x, y, w, h, title, desc, color) {
+      drawRoundedRect(x, y, w, h, 14, 'rgba(15, 23, 42, 0.9)', color, 1.5);
+      ctx.font = "800 20px 'Outfit', sans-serif";
+      ctx.fillStyle = color;
+      ctx.textAlign = "left";
+      ctx.fillText(title, x + 24, y + 36);
+
+      ctx.font = "500 16px 'Plus Jakarta Sans', sans-serif";
+      ctx.fillStyle = "#CBD5E1";
+      ctx.fillText(desc, x + 24, y + 70);
+    }
+
+    function drawNativeGapChart(x, y, w, h, p) {
+      drawRoundedRect(x, y, w, h, 18, 'rgba(15, 23, 42, 0.95)', '#38BDF8', 1.5);
+      ctx.font = "800 18px 'JetBrains Mono', monospace";
+      ctx.fillStyle = "#38BDF8";
+      ctx.textAlign = "left";
+      ctx.fillText("KORPORASI QRIS VS REALITAS SAK EMKM (2023-2026)", x + 24, y + 36);
+
+      // Axes
+      const ox = x + 60;
+      const oy = y + h - 50;
+      const gw = w - 100;
+      const gh = h - 110;
+
+      ctx.strokeStyle = '#334155';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(ox, y + 60);
+      ctx.lineTo(ox, oy);
+      ctx.lineTo(ox + gw, oy);
+      ctx.stroke();
+
+      // Line 1: QRIS Adoption (Skyrocketing)
+      const qrisData = [180, 245, 310, 365, 420];
+      const sakData = [12, 16, 21, 24, 120];
+
+      ctx.strokeStyle = '#38BDF8';
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      for (let i = 0; i < qrisData.length; i++) {
+        const px = ox + (i / 4) * gw;
+        const py = oy - (qrisData[i] / 450) * gh;
+        if (i === 0) ctx.moveTo(px, py);
+        else ctx.lineTo(px, py);
+      }
+      ctx.stroke();
+
+      // Line 2: SAK EMKM Readiness (Dramatically Lower)
+      ctx.strokeStyle = '#C00000';
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      for (let i = 0; i < sakData.length; i++) {
+        const px = ox + (i / 4) * gw;
+        const py = oy - (sakData[i] / 450) * gh;
+        if (i === 0) ctx.moveTo(px, py);
+        else ctx.lineTo(px, py);
+      }
+      ctx.stroke();
+
+      // Callout Gap Badge
+      drawRoundedRect(ox + gw * 0.55, y + 90, 180, 50, 10, '#C00000', '#FFF', 1.5);
+      ctx.font = "900 20px 'Outfit', sans-serif";
+      ctx.fillStyle = "#FFF";
+      ctx.textAlign = "center";
+      ctx.fillText("+94% GAP", ox + gw * 0.55 + 90, y + 122);
+    }
+
+    function drawPillarBox(x, y, w, h, code, title, points, color, icon, t) {
+      const cx = x - w / 2;
+      drawRoundedRect(cx, y, w, h, 20, 'rgba(15, 23, 42, 0.95)', color, 2);
+
+      // Header Tag
+      drawRoundedRect(cx + 20, y + 20, 120, 32, 8, color, null);
+      ctx.font = "800 14px 'JetBrains Mono', monospace";
+      ctx.fillStyle = "#FFF";
+      ctx.textAlign = "center";
+      ctx.fillText(code, cx + 80, y + 42);
+
+      ctx.font = "900 28px 'Outfit', sans-serif";
+      ctx.fillStyle = "#FFF";
+      ctx.textAlign = "left";
+      ctx.fillText(title, cx + 24, y + 95);
+
+      // Points
+      ctx.font = "500 17px 'Plus Jakarta Sans', sans-serif";
+      ctx.fillStyle = "#CBD5E1";
+      for (let i = 0; i < points.length; i++) {
+        ctx.fillText(points[i], cx + 24, y + 155 + i * 44);
+      }
+    }
+
+    function drawInteractiveWaveform(x, y, w, h, t) {
+      drawRoundedRect(x, y, w, h, 12, '#030712', '#1D9A8A', 1);
+      const bars = 24;
+      const bw = w / bars - 4;
+      for (let i = 0; i < bars; i++) {
+        const bh = Math.sin(t * 8 + i * 0.5) * 18 + 22;
+        ctx.fillStyle = i % 2 === 0 ? '#1D9A8A' : '#FF8D2A';
+        ctx.fillRect(x + i * (bw + 4) + 6, y + h - bh - 6, bw, bh);
+      }
+    }
+
+    function drawRepoFolderTree(x, y, w, h) {
+      drawRoundedRect(x, y, w, h, 16, 'rgba(15, 23, 42, 0.95)', '#38BDF8', 1.5);
+      ctx.font = "800 20px 'JetBrains Mono', monospace";
+      ctx.fillStyle = "#38BDF8";
+      ctx.textAlign = "left";
+      ctx.fillText("STRUKTUR REPO CLEAN ARCHITECTURE", x + 24, y + 40);
+
+      const items = [
+        "AIWIC2026_MauHealing_BisnisMate/",
+        "├── src/controllers/ (Voice, Ledger, Calendar, KUR)",
+        "├── src/services/    (Whisper LoRA, Gemini OCR, SAK)",
+        "├── src/routes/      (REST API Endpoints v1)",
+        "├── public/          (Web PWA Frontend, CSS, Assets)",
+        "├── tests/           (5/5 Modular Automated Tests)",
+        "└── tools/           (Internal Generator Scripts)"
+      ];
+
+      ctx.font = "600 16px 'JetBrains Mono', monospace";
+      ctx.fillStyle = "#E2E8F0";
+      for (let i = 0; i < items.length; i++) {
+        ctx.fillText(items[i], x + 30, y + 85 + i * 40);
+      }
+    }
+
+    function drawTechBadge(x, y, w, h, title, desc, color) {
+      drawRoundedRect(x, y, w, h, 14, 'rgba(15, 23, 42, 0.9)', color, 1.5);
+      ctx.font = "800 18px 'Outfit', sans-serif";
+      ctx.fillStyle = color;
+      ctx.textAlign = "left";
+      ctx.fillText(title, x + 24, y + 32);
+
+      ctx.font = "500 15px 'Plus Jakarta Sans', sans-serif";
+      ctx.fillStyle = "#CBD5E1";
+      ctx.fillText(desc, x + 24, y + 62);
+    }
+
+    function drawCashflowGraph(x, y, w, h, p) {
+      drawRoundedRect(x, y, w, h, 16, 'rgba(15, 23, 42, 0.95)', '#FF8D2A', 1.5);
+      ctx.font = "800 18px 'JetBrains Mono', monospace";
+      ctx.fillStyle = "#FF8D2A";
+      ctx.textAlign = "left";
+      ctx.fillText("TRAJEKTORI ARUS KAS 18 BULAN (ZERO BURN-RATE)", x + 24, y + 36);
+
+      const ox = x + 60;
+      const oy = y + h - 50;
+      const gw = w - 100;
+      const gh = h - 110;
+
+      ctx.strokeStyle = '#334155';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(ox, y + 60);
+      ctx.lineTo(ox, oy);
+      ctx.lineTo(ox + gw, oy);
+      ctx.stroke();
+
+      // Cumulative Cashflow Curve (J-Curve)
+      const data = [-0.30, -0.55, -0.60, -0.35, 0.20, 1.05, 2.30, 3.92, 5.92, 8.30];
+      ctx.strokeStyle = '#1D9A8A';
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      for (let i = 0; i < data.length; i++) {
+        const px = ox + (i / 9) * gw;
+        const py = oy - ((data[i] + 1) / 10) * gh;
+        if (i === 0) ctx.moveTo(px, py);
+        else ctx.lineTo(px, py);
+      }
+      ctx.stroke();
+
+      // Payback marker at Month 8
+      drawRoundedRect(ox + gw * 0.5, oy - gh * 0.45, 160, 45, 8, '#107C41', '#FFF', 1);
+      ctx.font = "800 16px 'Outfit', sans-serif";
+      ctx.fillStyle = "#FFF";
+      ctx.textAlign = "center";
+      ctx.fillText("PAYBACK M8", ox + gw * 0.5 + 80, oy - gh * 0.45 + 28);
+    }
+
+    function drawFinCard(x, y, w, h, val, lbl, color) {
+      drawRoundedRect(x, y, w, h, 12, 'rgba(15, 23, 42, 0.9)', color, 1.5);
+      ctx.font = "900 28px 'Outfit', sans-serif";
+      ctx.fillStyle = color;
+      ctx.textAlign = "left";
+      ctx.fillText(val, x + 24, y + 46);
+
+      ctx.font = "600 16px 'Plus Jakarta Sans', sans-serif";
+      ctx.fillStyle = "#CBD5E1";
+      ctx.textAlign = "right";
+      ctx.fillText(lbl, x + w - 24, y + 44);
+    }
+
+    function drawBaliBox(x, y, w, h, letter, title, desc, color) {
+      drawRoundedRect(x, y, w, h, 16, 'rgba(15, 23, 42, 0.95)', color, 2);
+
+      drawRoundedRect(x + 20, y + 20, 50, 50, 12, color, null);
+      ctx.font = "900 32px 'Outfit', sans-serif";
+      ctx.fillStyle = "#FFF";
+      ctx.textAlign = "center";
+      ctx.fillText(letter, x + 45, y + 56);
+
+      ctx.font = "900 24px 'Outfit', sans-serif";
+      ctx.fillStyle = color;
+      ctx.textAlign = "left";
+      ctx.fillText(title, x + 85, y + 54);
+
+      ctx.font = "500 15px 'Plus Jakarta Sans', sans-serif";
+      ctx.fillStyle = "#CBD5E1";
+      wrapText(desc, x + 20, y + 105, w - 40, 22);
+    }
+
+    function wrapText(text, x, y, maxWidth, lineHeight) {
+      const words = text.split(' ');
+      let line = '';
+      let curY = y;
+      ctx.textAlign = "left";
+
+      for (let n = 0; n < words.length; n++) {
+        const testLine = line + words[n] + ' ';
+        const metrics = ctx.measureText(testLine);
+        if (metrics.width > maxWidth && n > 0) {
+          ctx.fillText(line, x, curY);
+          line = words[n] + ' ';
+          curY += lineHeight;
+        } else {
+          line = testLine;
+        }
+      }
+      ctx.fillText(line, x, curY);
+    }
+
+    // =========================================================================
+    // MASTER ANIMATION LOOP (60 FPS)
+    // =========================================================================
+
+    function animate(now) {
+      const delta = (now - lastTimestamp) / 1000;
+      lastTimestamp = now;
+
+      // FPS Tracking
+      framesThisSecond++;
+      if (now - lastFpsUpdate >= 1000) {
+        fpsCounter = framesThisSecond;
+        framesThisSecond = 0;
+        lastFpsUpdate = now;
+        document.getElementById('hud-fps').innerText = `${fpsCounter} FPS`;
+      }
+
+      if (isPlaying) {
+        currentTime += delta;
+        if (currentTime > totalDuration) {
+          currentTime = 0;
+          spokenCues.clear();
+        }
+        document.getElementById('timeScrubber').value = currentTime;
+        updateHUDTimecode(currentTime);
+        triggerNarration(currentTime);
+      }
+
+      // Clear & Draw Frame
+      drawGridBackground(currentTime);
+
+      // Route Scene Based on Time
+      if (currentTime < 12.0) {
+        renderScene1(currentTime);
+        updateSceneDescription(1);
+      } else if (currentTime < 26.0) {
+        renderScene2(currentTime);
+        updateSceneDescription(2);
+      } else if (currentTime < 45.0) {
+        renderScene3(currentTime);
+        updateSceneDescription(3);
+      } else if (currentTime < 58.0) {
+        renderScene4(currentTime);
+        updateSceneDescription(4);
+      } else if (currentTime < 70.0) {
+        renderScene5(currentTime);
+        updateSceneDescription(5);
+      } else {
+        renderScene6(currentTime);
+        updateSceneDescription(6);
+      }
+
+      requestAnimationFrame(animate);
+    }
+
+    function updateHUDTimecode(t) {
+      const m = String(Math.floor(t / 60)).padStart(2, '0');
+      const s = String(Math.floor(t % 60)).padStart(2, '0');
+      const ms = String(Math.floor((t % 1) * 100)).padStart(2, '0');
+      document.getElementById('hud-timecode').innerText = `${m}:${s}:${ms}`;
+    }
+
+    const sceneDescriptions = {
+      1: {
+        title: "ACT 1: THE REGIONAL REALITY",
+        badge: "Waktu: 00:00 s.d. 00:12",
+        text: "<strong>Babak 1: Realitas UMKM Subsisten Bali.</strong> Kemakmuran pariwisata Bali ditopang oleh 442K+ pedagang pasar tradisional seperti Ibu Wayan di Pasar Badung. Pedagang bekerja 14 jam/hari dengan tangan basah, kehilangan 2,5 jam/hari untuk mencatat nota manual yang rentan basah dan tercecer."
+      },
+      2: {
+        title: "ACT 2: THE DIGITAL ADOPTION GAP",
+        badge: "Waktu: 00:12 s.d. 00:26",
+        text: "<strong>Babak 2: Kesenjangan Digital & Kegagalan POS.</strong> Adopsi QRIS menembus 365K+ merchant, namun pembukuan resmi SAK EMKM tertinggal jauh (+94% gap). Aplikasi kasir ketik manual ditinggalkan (BukuKas tutup 2023) dan asimetri hari raya adat Galungan memicu pembuangan stok 35%."
+      },
+      3: {
+        title: "ACT 3: THE 3-PILLAR BREAKTHROUGH",
+        badge: "Waktu: 00:26 s.d. 00:45",
+        text: "<strong>Babak 3: Arsitektur 3 Pilar BisnisMate AI.</strong> Terobosan Web PWA tanpa ketik: (1) Voice AI dialek Bali-ID & Vision OCR nota basah <1.2 detik; (2) Sinkronisasi Kalender Adat Caka 1948 untuk early restock Galungan; (3) Otomatisasi neraca SAK EMKM dan skor kelayakan KUR (88.5/100)."
+      },
+      4: {
+        title: "ACT 4: CLEAN ARCHITECTURE & UU PDP",
+        badge: "Waktu: 00:45 s.d. 00:58",
+        text: "<strong>Babak 4: Kualitas Repositori & Kepatuhan Regulasi.</strong> Rekayasa perangkat lunak berbasis Clean Modular Node.js Express. Pemrosesan in-memory tanpa retensi audio mentah patuh UU PDP No. 27/2022, service worker offline-first, dan 5/5 automated unit tests lulus 100%."
+      },
+      5: {
+        title: "ACT 5: 18-MONTH ROADMAP & ROI",
+        badge: "Waktu: 00:58 s.d. 00:70",
+        text: "<strong>Babak 5: Peta Jalan 18 Bulan & Nilai Ekonomi.</strong> Skor kelayakan terbobot 4.58 / 5.00. Trajektori arus kas mandiri (Zero Burn-Rate) mencapai Payback pada bulan ke-8, menghasilkan Rp 36.80 Miliar manfaat ekosistem dan Net ROI 218.5%."
+      },
+      6: {
+        title: "ACT 6: THE B-A-L-I STRATEGIC VISION",
+        badge: "Waktu: 00:70 s.d. 00:85",
+        text: "<strong>Babak 6: Visi Strategis B-A-L-I & Penutup AIWIC 2026.</strong> Mewujudkan UMKM Bali Naik Kelas: Bankable, Akurasi Stok Adat, Literasi Tanpa Ketik, dan Inklusi Berkelanjutan. Karya inovasi resmi Tim Mau Healing (Inovator: Candra Kus Khoiri Wicaksono)."
+      }
+    };
+
+    let activeScene = 1;
+    function updateSceneDescription(sceneId) {
+      if (activeScene === sceneId) return;
+      activeScene = sceneId;
+      const s = sceneDescriptions[sceneId];
+      document.getElementById('hud-scene-name').innerText = s.title;
+      document.getElementById('scene-timestamp-badge').innerText = s.badge;
+      document.getElementById('scene-description').innerHTML = s.text;
+    }
+
+    // =========================================================================
+    // CONTROLLER & PLAYER INTERACTIONS
+    // =========================================================================
+
+    function togglePlay() {
+      initAudio();
+      isPlaying = !isPlaying;
+      const centerBtn = document.getElementById('center-play-btn');
+      const playIcon = document.getElementById('playIcon');
+      const playText = document.getElementById('playText');
+
+      if (isPlaying) {
+        centerBtn.classList.add('opacity-0', 'pointer-events-none');
+        playIcon.className = "fas fa-pause";
+        playText.innerText = "Jeda";
+        if (!synthInterval) {
+          synthInterval = setInterval(playCyberPulse, 600);
+        }
+      } else {
+        centerBtn.classList.remove('opacity-0', 'pointer-events-none');
+        playIcon.className = "fas fa-play";
+        playText.innerText = "Putar Video";
+        if ('speechSynthesis' in window) window.speechSynthesis.pause();
+      }
+    }
+
+    function restartVideo() {
+      currentTime = 0;
+      spokenCues.clear();
+      document.getElementById('timeScrubber').value = 0;
+      if (!isPlaying) togglePlay();
+    }
+
+    function seekTo(sec) {
+      initAudio();
+      currentTime = parseFloat(sec);
+      spokenCues.clear();
+      document.getElementById('timeScrubber').value = currentTime;
+      updateHUDTimecode(currentTime);
+    }
+
+    function toggleMute() {
+      initAudio();
+      isMuted = !isMuted;
+      const muteIcon = document.getElementById('muteIcon');
+      const muteBtn = document.getElementById('muteBtn');
+      if (isMuted) {
+        muteIcon.className = "fas fa-volume-xmark text-red-400";
+        muteBtn.classList.add('border', 'border-red-500/50');
+      } else {
+        muteIcon.className = "fas fa-volume-high text-emerald-400";
+        muteBtn.classList.remove('border', 'border-red-500/50');
+      }
+    }
+
+    function toggleVoiceover() {
+      isVoiceoverEnabled = !isVoiceoverEnabled;
+      const btn = document.getElementById('voiceoverBtn');
+      if (!isVoiceoverEnabled) {
+        if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+        btn.classList.add('opacity-50');
+      } else {
+        btn.classList.remove('opacity-50');
+        spokenCues.clear();
+      }
+    }
+
+    function toggleFullscreen() {
+      const container = document.getElementById('player-container');
+      if (!document.fullscreenElement) {
+        container.requestFullscreen().catch(err => {});
+      } else {
+        document.exitFullscreen();
+      }
+    }
+
+    // Keyboard Shortcuts
+    window.addEventListener('keydown', (e) => {
+      if (e.code === 'Space') {
+        e.preventDefault();
+        togglePlay();
+      } else if (e.code === 'KeyF') {
+        toggleFullscreen();
+      } else if (e.code === 'KeyM') {
+        toggleMute();
+      } else if (e.code === 'ArrowRight') {
+        seekTo(Math.min(totalDuration, currentTime + 5));
+      } else if (e.code === 'ArrowLeft') {
+        seekTo(Math.max(0, currentTime - 5));
+      }
+    });
+
+    // =========================================================================
+    // VIDEO EXPORT ENGINE (Canvas CaptureStream + MediaRecorder API)
+    // =========================================================================
+    async function recordAndExportVideo() {
+      initAudio();
+      const exportBtn = document.getElementById('exportVideoBtn');
+      const recIndicator = document.getElementById('recording-indicator');
+
+      exportBtn.disabled = true;
+      exportBtn.classList.add('opacity-70');
+      exportBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span>Merekam Video 60 FPS...</span>';
+      recIndicator.classList.remove('hidden');
+
+      // Reset to beginning
+      seekTo(0);
+      isPlaying = true;
+
+      // Capture 60 FPS Canvas stream
+      const stream = canvas.captureStream(60);
+
+      // Setup MediaRecorder with best available mime type
+      const mimeTypes = [
+        'video/webm;codecs=vp9',
+        'video/webm',
+        'video/mp4'
+      ];
+      let selectedMime = 'video/webm';
+      for (const m of mimeTypes) {
+        if (MediaRecorder.isTypeSupported(m)) {
+          selectedMime = m;
+          break;
+        }
+      }
+
+      const recorder = new MediaRecorder(stream, {
+        mimeType: selectedMime,
+        videoBitsPerSecond: 6000000 // 6 Mbps High Quality
+      });
+
+      const chunks = [];
+      recorder.ondataavailable = (e) => {
+        if (e.data.size > 0) chunks.push(e.data);
+      };
+
+      recorder.onstop = () => {
+        recIndicator.classList.add('hidden');
+        exportBtn.disabled = false;
+        exportBtn.classList.remove('opacity-70');
+        exportBtn.innerHTML = '<i class="fas fa-check text-emerald-300"></i> <span>Video Berhasil Diunduh!</span>';
+
+        const blob = new Blob(chunks, { type: selectedMime });
+        const ext = selectedMime.includes('mp4') ? 'mp4' : 'webm';
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `BisnisMate_MotionGraphic_Showreel_AIWIC2026.${ext}`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+
+        setTimeout(() => {
+          exportBtn.innerHTML = '<i class="fas fa-video"></i> <span>Rekam & Unduh MP4 / WebM</span>';
+        }, 4000);
+      };
+
+      recorder.start();
+
+      // Record until video reaches end
+      const checkEndInterval = setInterval(() => {
+        if (currentTime >= totalDuration - 0.5) {
+          clearInterval(checkEndInterval);
+          recorder.stop();
+          isPlaying = false;
+        }
+      }, 500);
+    }
+
+    // Canvas click toggles play
+    canvas.addEventListener('click', togglePlay);
+
+    // Start Animation Loop on page load
+    requestAnimationFrame(animate);
+  </script>
+</body>
+</html>

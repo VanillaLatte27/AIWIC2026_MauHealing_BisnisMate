@@ -1,0 +1,28 @@
+{
+  "name": "bisnismate-web",
+  "version": "4.1.0",
+  "description": "BisnisMate Web: Autonomous Financial & Inventory Co-Pilot untuk UMKM (AIWIC 2026 Submission - Team Mau Healing)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "test": "node test.js"
+  },
+  "keywords": [
+    "aiwic2026",
+    "bisnismate",
+    "mau-healing",
+    "msme",
+    "umkm",
+    "bali",
+    "fintech",
+    "ai-copilot",
+    "sak-emkm"
+  ],
+  "author": "Candra Kus Khoiri Wicaksono (Team Mau Healing)",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.1"
+  }
+}
